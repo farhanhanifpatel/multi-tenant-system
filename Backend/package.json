@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server.ts",
     "build": "tsc",
-    "start": "node server.js"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
