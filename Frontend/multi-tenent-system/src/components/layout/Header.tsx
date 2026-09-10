@@ -99,7 +99,7 @@ const getRelativeTime = (date: string) => {
 
 const Header = ({ setSidebarOpen }: HeaderProps) => {
   const { user } = useAuth();
-
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -198,8 +198,9 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
             {/* RIGHT */}
             <div className="flex items-center gap-3">
               {/* NOTIFICATION */}
-              <div className="group relative">
+              <div className="relative">
                 <button
+                  onClick={() => setNotificationOpen((prev) => !prev)}
                   className="
                   relative rounded-lg p-2 text-gray-300
                   transition hover:bg-gray-800 hover:text-white
@@ -223,16 +224,18 @@ const Header = ({ setSidebarOpen }: HeaderProps) => {
 
                 {/* NOTIFICATION DROPDOWN */}
                 <div
-                  className="
-                  invisible absolute right-0 top-12 z-50
-                  w-80 translate-y-2 opacity-0
-                  rounded-xl border border-slate-700
-                  bg-slate-900 shadow-2xl
-                  transition-all duration-200
-                  group-hover:visible
-                  group-hover:translate-y-0
-                  group-hover:opacity-100
-                "
+                  className={`
+    absolute right-0 top-12 z-50
+    w-80
+    rounded-xl border border-slate-700
+    bg-slate-900 shadow-2xl
+    transition-all duration-200
+    ${
+      notificationOpen
+        ? "visible translate-y-0 opacity-100"
+        : "invisible translate-y-2 opacity-0"
+    }
+  `}
                 >
                   {/* Header */}
 
