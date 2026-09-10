@@ -18,6 +18,7 @@ import CustomerOutstanding from "./pages/customers/GetOutStanding";
 import Register from "./pages/auth/Register";
 // import path from "path";
 import SupplierList from "./pages/suppliers/SupplierList";
+import NotFound from "./pages/NotFound";
 function App() {
   return (
     <BrowserRouter>
@@ -67,6 +68,8 @@ function App() {
             path="/customers/outstanding"
             element={<CustomerOutstanding />}
           />
+
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
 
