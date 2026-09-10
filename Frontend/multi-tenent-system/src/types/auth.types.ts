@@ -16,6 +16,7 @@ export interface User {
 
 export interface AuthContextType {
   user: User | null;
+  shopName: User["shopId"]["shopName"] | null;
   loading: boolean;
   setUser: Dispatch<SetStateAction<User | null>>;
   logoutUser: () => Promise<void>;

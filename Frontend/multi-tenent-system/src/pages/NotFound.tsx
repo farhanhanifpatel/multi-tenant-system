@@ -36,7 +36,7 @@ const NotFound = () => {
 
             {/* Decorative text */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.9em] text-white/10 sm:text-xl">
-              Route Not Found
+              Page Not Found
             </div>
           </div>
 

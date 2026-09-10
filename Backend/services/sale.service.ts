@@ -13,6 +13,11 @@ import { PaymentStatus } from "../constants/payments";
 import { APIFeatures } from "../utils/apiFeatures";
 import { TransactionType } from "../constants/transaction-type";
 import { Transaction } from "../models/transaction.model";
+import {
+  NotificationType,
+  NotificationReferenceType,
+} from "../models/notification.model";
+import { createNotificationService } from "./notification.service";
 
 export const createSaleService = async (
   shopId: string,
@@ -61,6 +66,7 @@ export const createSaleService = async (
         price: product.sellingPrice,
         subtotal,
       });
+      const newStock = product.stock - item.quantity;
 
       await Product.findByIdAndUpdate(
         product._id,
@@ -73,6 +79,32 @@ export const createSaleService = async (
           session,
         },
       );
+
+      // 🔔 Low stock notification
+      if (newStock <= product.lowStockThreshold && newStock > 0) {
+        await createNotificationService({
+          shopId,
+          userId,
+          title: "Low Stock Alert",
+          message: `${product.name} is running low on stock.`,
+          type: NotificationType.LOW_STOCK,
+          referenceId: product._id.toString(),
+          referenceType: NotificationReferenceType.PRODUCT,
+        });
+      }
+
+      // 🔔 Out of stock notification
+      if (newStock <= 0) {
+        await createNotificationService({
+          shopId,
+          userId,
+          title: "Out of Stock",
+          message: `${product.name} is out of stock.`,
+          type: NotificationType.OUT_OF_STOCK,
+          referenceId: product._id.toString(),
+          referenceType: NotificationReferenceType.PRODUCT,
+        });
+      }
     }
 
     const paidAmount = payload.paidAmount || 0;

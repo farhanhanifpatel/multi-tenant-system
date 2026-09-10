@@ -24,3 +24,17 @@ export const logout = async () => {
   const response = await api.post("/auth/logout");
   return response.data;
 };
+
+export interface UpdateProfileRequest {
+  name?: string;
+  shopName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
+export const updateProfile = async (payload: UpdateProfileRequest) => {
+  const response = await api.patch("/auth/profile", payload);
+
+  return response.data;
+};

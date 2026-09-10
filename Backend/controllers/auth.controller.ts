@@ -4,6 +4,7 @@ import {
   getMeService,
   loginService,
   registerService,
+  updateProfileService,
 } from "../services/auth.service";
 import { RequestWithBody } from "../types/api.type";
 import {
@@ -13,9 +14,14 @@ import {
 } from "../types/auth.types";
 import { catchAsync } from "../utils/catchAsync";
 import { sendSuccess } from "../shared/responses";
-import { LoginResponse, TypedResponse } from "../types/types";
+import {
+  LoginResponse,
+  TypedResponse,
+  UpdateProfileResponse,
+} from "../types/types";
 import { generateToken } from "../utils/jwt";
 import { AuthRequest } from "../interface/auth-request.interface";
+import { UpdateProfileRequest } from "../validation/profile.validation";
 
 export const register = catchAsync(
   async (
@@ -76,6 +82,26 @@ export const logout = catchAsync(
     return sendSuccess(res, {
       message: "Logout successful",
       data: null,
+    });
+  },
+);
+
+export const updateProfile = catchAsync(
+  async (
+    req: AuthRequest & RequestWithBody<UpdateProfileRequest>,
+    res: TypedResponse<UpdateProfileResponse>,
+    next: NextFunction,
+  ) => {
+    const result = await updateProfileService(
+      req.user!.userId,
+      req.user!.shopId,
+      req.body,
+    );
+
+    return sendSuccess(res, {
+      message: "Profile updated successfully",
+      data: result,
+      statusCode: 200,
     });
   },
 );

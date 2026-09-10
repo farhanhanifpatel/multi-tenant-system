@@ -1,4 +1,5 @@
 import { ParamsDictionary } from "express-serve-static-core";
+import { SubscriptionStatus } from "../constants/subscription-plan";
 export type TypedResponse<T> = import("express").Response<
   StdResponse<T | null>,
   { user: LoginResponse; data: any }
@@ -29,3 +30,14 @@ export type SignupResponse = {
   name: string;
   email: string;
 };
+
+export interface UpdateProfileResponse {
+  userId: string;
+  shopId: string;
+  name: string;
+  email: string;
+  mobile: string;
+  shopName: string;
+  subscriptionStatus: SubscriptionStatus;
+  trialEndsAt: Date;
+}

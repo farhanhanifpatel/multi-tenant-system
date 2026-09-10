@@ -13,6 +13,7 @@ import {
   RegisterRequest,
   RegisterResponse,
 } from "../types/auth.types";
+import { UpdateProfileRequest } from "../validation/profile.validation";
 
 export const registerService = async (
   payload: RegisterRequest,
@@ -150,4 +151,81 @@ export const getMeService = async (userId: string) => {
   }
 
   return user;
+};
+
+export const updateProfileService = async (
+  userId: string,
+  shopId: string,
+  payload: UpdateProfileRequest,
+) => {
+  const { name, shopName, email, password } = payload;
+
+  const user = await User.findOne({ _id: userId, shopId });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  const shop = await Shop.findById(shopId);
+
+  if (!shop) {
+    throw new AppError("Shop not found", 404);
+  }
+
+  // Update email
+  if (email && email !== user.email) {
+    const existingEmail = await User.findOne({
+      email,
+      _id: { $ne: user._id },
+    });
+
+    if (existingEmail) {
+      throw new AppError("Email already registered", 409);
+    }
+
+    user.email = email;
+    shop.email = email;
+  }
+
+  // Update name
+  if (name) {
+    user.name = name;
+    shop.ownerName = name;
+  }
+
+  // Update shop name
+  if (shopName && shopName !== shop.shopName) {
+    const slug = generateSlug(shopName);
+
+    const existingShop = await Shop.findOne({
+      slug,
+      _id: { $ne: shop._id },
+    });
+
+    if (existingShop) {
+      throw new AppError("Shop name already exists", 409);
+    }
+
+    shop.shopName = shopName;
+    shop.slug = slug;
+  }
+
+  // Update password
+  if (password) {
+    user.password = await createHash(password);
+  }
+
+  await user.save();
+  await shop.save();
+
+  return {
+    userId: user._id.toString(),
+    shopId: shop._id.toString(),
+    name: user.name,
+    email: user.email,
+    mobile: user.mobile,
+    shopName: shop.shopName,
+    subscriptionStatus: shop.subscriptionStatus,
+    trialEndsAt: shop.trialEndsAt,
+  };
 };

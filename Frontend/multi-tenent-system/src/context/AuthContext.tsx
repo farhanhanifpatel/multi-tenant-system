@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
+        shopName: user?.shopId?.shopName || null,
         loading,
         setUser,
         logoutUser,

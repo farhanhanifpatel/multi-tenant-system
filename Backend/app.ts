@@ -11,6 +11,7 @@ import transactionRoutes from "./routes/transaction.route";
 import dashboardRoutes from "./routes/dashboard.route";
 import supplierRoutes from "./routes/supplier.routes";
 import supplierPurchaseRoutes from "./routes/supplier-purchase.route";
+import notificationRoutes from "./routes/notification.routes";
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/api/sales", saleRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/suppliers", supplierRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.use("/api/supplier-purchases", supplierPurchaseRoutes);
 app.use(errorHandling);
